@@ -1,1 +1,191 @@
-﻿<!doctype html><title>Synthwire data</title><h1>Synthwire data</h1><p><a href='./synthwire.json'>synthwire.json</a></p>
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Synthwire â€” a private reader for the newsletters you follow</title>
+<meta name="description" content="Synthwire is an Android reader for the newsletters you follow. No account, no ads, no tracking. Digest, catalog, in-app reader and Sentinels premium tools." />
+<meta name="theme-color" content="#f2ead6" />
+<style>
+  :root {
+    --page: #f2ead6;
+    --paper: #fffdf6;
+    --paper-sunken: #f7f0dd;
+    --ink: #14110e;
+    --ink-muted: #5a5348;
+    --rule: #14110e;
+    --accent: #e8590c;
+    --accent-ink: #14110e;
+    --accent-text: #a8400a;
+    --serif: "Playfair Display", Georgia, "Times New Roman", serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: "Inter", -apple-system, "Segoe UI", system-ui, Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent-text); text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--accent-text); outline-offset: 3px; }
+  .skip-link { position: absolute; left: -9999px; top: 0; background: var(--paper); padding: .5rem; z-index: 6; }
+  .skip-link:focus { left: .5rem; }
+  .wrap { width: min(64rem, 100%); margin: 0 auto; padding: 0 1.25rem; }
+  header.site { border-bottom: 2px solid var(--rule); background: var(--page); }
+  .site__inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .875rem 0; }
+  .brand { display: inline-flex; align-items: center; gap: .5rem; font-family: var(--mono); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; font-size: .8125rem; color: var(--ink); text-decoration: none; }
+  .brand__mark { color: var(--accent-text); }
+  nav.main { display: flex; gap: 1rem; flex-wrap: wrap; }
+  nav.main a { font-family: var(--mono); font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); text-decoration: none; border-bottom: 2px solid transparent; padding: .25rem 0; }
+  nav.main a:hover, nav.main a:focus-visible { border-bottom-color: var(--accent); }
+  main { padding: 2.5rem 0 3.5rem; }
+  .eyebrow { font-family: var(--mono); font-size: .6875rem; letter-spacing: .18em; text-transform: uppercase; color: var(--accent-text); margin: 0 0 .75rem; }
+  h1 { font-family: var(--serif); font-size: clamp(2.25rem, 7vw, 4rem); line-height: 1.03; margin: 0 0 1rem; max-width: 18ch; }
+  .lede { font-size: 1.0625rem; line-height: 1.6; color: var(--ink-muted); max-width: 38rem; margin: 0 0 1.5rem; }
+  .actions { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 2.875rem; padding: .625rem 1rem; border: 2px solid var(--rule); background: var(--paper); color: var(--ink); font-family: var(--mono); font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; box-shadow: 3px 3px 0 var(--rule); transition: transform .15s ease, box-shadow .15s ease; }
+  .btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--rule); }
+  .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--rule); }
+  .btn--primary { background: var(--accent); border-color: var(--accent); }
+  .fineprint { font-family: var(--mono); font-size: .6875rem; color: var(--ink-muted); margin: 0 0 2.5rem; }
+  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; margin: 0 0 3rem; padding: 0; list-style: none; }
+  .stat { border: 2px solid var(--rule); background: var(--paper); box-shadow: 4px 4px 0 var(--rule); padding: .75rem; }
+  .stat strong { display: block; font-family: var(--serif); font-size: 1.75rem; line-height: 1; }
+  .stat span { display: block; font-family: var(--mono); font-size: .625rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-muted); margin-top: .375rem; }
+  h2 { font-family: var(--serif); font-size: clamp(1.75rem, 4vw, 2.5rem); line-height: 1.1; margin: 0 0 .75rem; }
+  .section { margin-top: 3rem; }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+  .card { border: 2px solid var(--rule); background: var(--paper); box-shadow: 5px 5px 0 var(--rule); padding: 1.125rem; }
+  .card h3 { font-family: var(--serif); font-size: 1.375rem; line-height: 1.15; margin: 0 0 .5rem; }
+  .card p { margin: 0; color: var(--ink-muted); font-size: .9375rem; line-height: 1.55; }
+  .tag { display: inline-block; font-family: var(--mono); font-size: .625rem; letter-spacing: .1em; text-transform: uppercase; padding: .1875rem .375rem; border: 2px solid var(--accent); background: var(--accent); color: var(--accent-ink); margin-bottom: .625rem; }
+  .download { border: 2px solid var(--rule); background: var(--paper); box-shadow: 6px 6px 0 var(--rule); padding: 1.25rem; margin-top: 1.25rem; }
+  .download h3 { font-family: var(--serif); font-size: 1.5rem; margin: 0 0 .25rem; }
+  .download p { color: var(--ink-muted); font-size: .9375rem; margin: 0 0 1rem; }
+  .meta { font-family: var(--mono); font-size: .6875rem; color: var(--ink-muted); margin: .875rem 0 0; line-height: 1.6; }
+  .data { border-top: 2px solid var(--rule); border-bottom: 2px solid var(--rule); padding: 1rem 0; margin-top: 3rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; align-items: center; }
+  .data p { margin: 0; color: var(--ink-muted); font-size: .9375rem; max-width: 36rem; }
+  footer.site { border-top: 2px solid var(--rule); background: var(--page); padding: 1.25rem 0 2rem; }
+  .footer__inner { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; align-items: flex-start; }
+  .footer__links { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .footer__links a { font-family: var(--mono); font-size: .6875rem; color: var(--ink); }
+  .colophon { font-family: var(--mono); font-size: .625rem; color: var(--ink-muted); margin: 1rem 0 0; }
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .site__inner { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site">
+  <div class="wrap site__inner">
+    <a class="brand" href="./"><span class="brand__mark" aria-hidden="true">&#9672;</span> Synthwire</a>
+    <nav class="main" aria-label="Main">
+      <a href="#download">Download</a>
+      <a href="#features">Features</a>
+      <a href="https://app.opzay.com">Web app</a>
+      <a href="./synthwire.json">Data</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap">
+    <p class="eyebrow">Android &middot; no account &middot; no ads &middot; no tracking</p>
+    <h1>A private reader for the newsletters you follow.</h1>
+    <p class="lede">
+      Recent issues from the public feeds of 42 newsletters, collected into one digest.
+      Search the catalog, follow what matters, and read every issue in a quiet in-app reader.
+      Free to use; Sentinels adds the research tools when you want them.
+    </p>
+    <div class="actions">
+      <a class="btn btn--primary" href="https://github.com/overmydragon/synthwire-android/releases/latest">Download the APK</a>
+      <a class="btn" href="https://app.opzay.com">Open the web app</a>
+    </div>
+    <p class="fineprint">Android 7.0+ &middot; arm64-v8a and x86_64 &middot; version 0.5.0 &middot; no account required</p>
+
+    <ul class="stats" aria-label="At a glance">
+      <li class="stat"><strong>42</strong><span>newsletters</span></li>
+      <li class="stat"><strong>152</strong><span>recent issues</span></li>
+      <li class="stat"><strong>5</strong><span>themes</span></li>
+      <li class="stat"><strong>0</strong><span>ads, ever</span></li>
+    </ul>
+
+    <section class="section" id="features" aria-labelledby="features-title">
+      <p class="eyebrow">What you get</p>
+      <h2 id="features-title">Built like a tool, not a feed.</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>Digest</h3>
+          <p>A stream of the latest issues across the catalog, newest first. Tap to read without leaving the app.</p>
+        </article>
+        <article class="card">
+          <h3>Catalog</h3>
+          <p>Every newsletter Synthwire tracks, with categories, search and one-tap following.</p>
+        </article>
+        <article class="card">
+          <h3>Reader</h3>
+          <p>Clean, sanitized article text with S/M/L/XL sizes, a reading-progress bar and source previews on press and hold.</p>
+        </article>
+        <article class="card">
+          <span class="tag">Sentinels</span>
+          <h3>Premium tools</h3>
+          <p>Unlimited bookmarks, highlights and notes, snapshots, export to Markdown/CSV/BibTeX/Zotero, shared collections and priority support. $2/month through the web app.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="download" aria-labelledby="download-title">
+      <p class="eyebrow">Android</p>
+      <h2 id="download-title">Install it.</h2>
+      <div class="download">
+        <h3>Synthwire for Android &mdash; v0.5.0</h3>
+        <p>Universal APK for arm64-v8a and x86_64 devices. Sideload it, or let your browser install it.</p>
+        <div class="actions" style="margin-bottom:0">
+          <a class="btn btn--primary" href="https://github.com/overmydragon/synthwire-android/releases/latest">Get the latest APK</a>
+          <a class="btn" href="https://github.com/overmydragon/synthwire-android/releases">All releases</a>
+        </div>
+        <p class="meta">
+          Test builds include a one-tap Sentinels demo account (Wrenlock) for reviewing premium tools.
+          Billing and passkey sign-in live at <a href="https://app.opzay.com">app.opzay.com</a>.
+        </p>
+      </div>
+    </section>
+
+    <section class="data" aria-label="Data endpoint">
+      <p>
+        <strong>Catalog data.</strong> The app and web client read the same public JSON feed:
+        newsletters, categories and recent issue text. Machine-readable, no auth.
+      </p>
+      <a class="btn" href="./synthwire.json">synthwire.json</a>
+    </section>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="footer__inner">
+      <div>
+        <a class="brand" href="./"><span class="brand__mark" aria-hidden="true">&#9672;</span> Synthwire</a>
+        <p class="meta">A reading library you actually own.</p>
+      </div>
+      <nav class="footer__links" aria-label="Legal">
+        <a href="https://app.opzay.com/terms">Terms of Service</a>
+        <a href="https://app.opzay.com/privacy">Privacy Policy</a>
+        <a href="https://app.opzay.com/subscription-terms">Subscription Terms</a>
+        <a href="https://app.opzay.com/free-trial">Free Trial</a>
+      </nav>
+    </div>
+    <p class="colophon">&copy; 2026 Synthwire. All Rights Reserved.</p>
+  </div>
+</footer>
+</body>
+</html>
