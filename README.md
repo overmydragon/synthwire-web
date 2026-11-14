@@ -5,8 +5,8 @@ Android app and the web client.
 
 | File | Purpose |
 |---|---|
-| `synthwire.json` | Catalog data: 42 newsletters, categories, and recent issue text (main content, capped). Read by the app with cache-busting. |
-| `index.html` | Landing page with the Android APK download and links to the live web app. |
+| `synthwire.json` | Catalog data: 100 newsletters, categories, and recent issue text (main content, capped). Read by the app with cache-busting. |
+| `index.html` | Free, family-friendly landing page with the Android APK download and links to the live web app. No paid tiers, no ads. |
 
 Live site: <https://overmydragon.github.io/synthwire-web/>
 

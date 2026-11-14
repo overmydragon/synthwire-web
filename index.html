@@ -1,10 +1,10 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Synthwire â€” a private reader for the newsletters you follow</title>
-<meta name="description" content="Synthwire is an Android reader for the newsletters you follow. No account, no ads, no tracking. Digest, catalog, in-app reader and Sentinels premium tools." />
+<title>Synthwire &mdash; a private, family-friendly reader for the newsletters you follow</title>
+<meta name="description" content="Synthwire is a free, family-friendly Android reader for the newsletters you follow. No account, no ads, no tracking. Digest, catalog, live updates, in-app reader and a library you own." />
 <meta name="theme-color" content="#f2ead6" />
 <style>
   :root {
@@ -61,6 +61,7 @@
   .section { margin-top: 3rem; }
   .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.5rem; }
   .card { border: 2px solid var(--rule); background: var(--paper); box-shadow: 5px 5px 0 var(--rule); padding: 1.125rem; }
+  .card--wide { grid-column: 1 / -1; }
   .card h3 { font-family: var(--serif); font-size: 1.375rem; line-height: 1.15; margin: 0 0 .5rem; }
   .card p { margin: 0; color: var(--ink-muted); font-size: .9375rem; line-height: 1.55; }
   .tag { display: inline-block; font-family: var(--mono); font-size: .625rem; letter-spacing: .1em; text-transform: uppercase; padding: .1875rem .375rem; border: 2px solid var(--accent); background: var(--accent); color: var(--accent-ink); margin-bottom: .625rem; }
@@ -100,23 +101,23 @@
 <main id="main">
   <div class="wrap">
     <p class="eyebrow">Android &middot; no account &middot; no ads &middot; no tracking</p>
-    <h1>A private reader for the newsletters you follow.</h1>
+    <h1>A private, family-friendly reader for the newsletters you follow.</h1>
     <p class="lede">
-      Recent issues from the public feeds of 42 newsletters, collected into one digest.
+      Recent issues from the public feeds of 100 newsletters, collected into one digest.
       Search the catalog, follow what matters, and read every issue in a quiet in-app reader.
-      Free to use; Sentinels adds the research tools when you want them.
+      Everything is free. No ads, ever.
     </p>
     <div class="actions">
       <a class="btn btn--primary" href="https://github.com/overmydragon/synthwire-web/releases/download/v0.5.0/app-universal-release.apk">Download the APK</a>
       <a class="btn" href="https://app.opzay.com">Open the web app</a>
     </div>
-    <p class="fineprint">Android 7.0+ &middot; arm64-v8a and x86_64 &middot; version 0.5.0 &middot; no account required</p>
+    <p class="fineprint">Android 7.0+ &middot; arm64-v8a and x86_64 &middot; version 0.6.0 &middot; no account required</p>
 
     <ul class="stats" aria-label="At a glance">
-      <li class="stat"><strong>42</strong><span>newsletters</span></li>
-      <li class="stat"><strong>152</strong><span>recent issues</span></li>
+      <li class="stat"><strong>100</strong><span>newsletters</span></li>
       <li class="stat"><strong>5</strong><span>themes</span></li>
       <li class="stat"><strong>0</strong><span>ads, ever</span></li>
+      <li class="stat"><strong>$0</strong><span>100% free</span></li>
     </ul>
 
     <section class="section" id="features" aria-labelledby="features-title">
@@ -125,20 +126,24 @@
       <div class="grid">
         <article class="card">
           <h3>Digest</h3>
-          <p>A stream of the latest issues across the catalog, newest first. Tap to read without leaving the app.</p>
+          <p>A stream of the latest issues across the catalog, newest first. Open any issue and read it without leaving the app.</p>
         </article>
         <article class="card">
           <h3>Catalog</h3>
-          <p>Every newsletter Synthwire tracks, with categories, search and one-tap following.</p>
+          <p>100 newsletters, with categories, search and one-tap following.</p>
         </article>
         <article class="card">
           <h3>Reader</h3>
           <p>Clean, sanitized article text with S/M/L/XL sizes, a reading-progress bar and source previews on press and hold.</p>
         </article>
         <article class="card">
-          <span class="tag">Sentinels</span>
-          <h3>Premium tools</h3>
-          <p>Unlimited bookmarks, highlights and notes, snapshots, export to Markdown/CSV/BibTeX/Zotero, shared collections and priority support. $2/month through the web app.</p>
+          <h3>Library</h3>
+          <p>Bookmarks, highlights and notes, snapshots, collections and exports. Free, and stored on your device.</p>
+        </article>
+        <article class="card card--wide">
+          <span class="tag">Live</span>
+          <h3>Live updates</h3>
+          <p>The catalog refreshes live while you read.</p>
         </article>
       </div>
     </section>
@@ -147,16 +152,16 @@
       <p class="eyebrow">Android</p>
       <h2 id="download-title">Install it.</h2>
       <div class="download">
-        <h3>Synthwire for Android &mdash; v0.5.0</h3>
-        <p>Universal APK for arm64-v8a and x86_64 devices. Sideload it, or let your browser install it.</p>
+        <h3>Synthwire for Android &mdash; v0.6.0</h3>
+        <p>Universal APK for arm64-v8a and x86_64 devices. Sideload it, or let your browser install it. Free, with no account.</p>
+        <!-- update asset URL when v0.6.0 is published -->
         <div class="actions" style="margin-bottom:0">
-          <a class="btn btn--primary" href="https://github.com/overmydragon/synthwire-web/releases/download/v0.5.0/app-universal-release.apk">Download v0.5.0 APK</a>
-          <a class="btn" href="https://github.com/overmydragon/synthwire-android/releases">GitHub releases</a>
+          <a class="btn btn--primary" href="https://github.com/overmydragon/synthwire-web/releases/download/v0.5.0/app-universal-release.apk">Download the APK</a>
+          <a class="btn" href="https://github.com/overmydragon/synthwire-android/releases/latest">GitHub releases</a>
         </div>
         <p class="meta">
-          SHA-256: 94fdb46c07f69e208285462be131c98f1818a2a9ca64b2e1dbe01833ac1a6676<br />
-          Test builds include a one-tap Sentinels demo account (Wrenlock) for reviewing premium tools.
-          Billing and passkey sign-in live at <a href="https://app.opzay.com">app.opzay.com</a>.
+          SHA-256: see release notes<br />
+          No account, no ads, no tracking.
         </p>
       </div>
     </section>
@@ -181,8 +186,6 @@
       <nav class="footer__links" aria-label="Legal">
         <a href="https://app.opzay.com/terms">Terms of Service</a>
         <a href="https://app.opzay.com/privacy">Privacy Policy</a>
-        <a href="https://app.opzay.com/subscription-terms">Subscription Terms</a>
-        <a href="https://app.opzay.com/free-trial">Free Trial</a>
       </nav>
     </div>
     <p class="colophon">&copy; 2026 Synthwire. All Rights Reserved.</p>
