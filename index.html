@@ -1,121 +1,591 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" >
-<meta name="viewport" content="width=device-width, initial-scale=1" >
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <title>Synthwire · a private, family-friendly reader for the newsletters you follow</title>
-<meta name="description" content="Synthwire is a free, family-friendly Android reader for the newsletters you follow. No account, no ads, no tracking. Digest, catalog, live updates, in-app reader and a library you own." >
-<meta name="theme-color" content="#f2ead6" >
+<meta name="description" content="Synthwire is a free, family-friendly Android reader for the newsletters you follow. No account, no ads, no tracking. Digest, catalog, live updates, in-app reader and a library you own.">
+<meta name="theme-color" content="#efe6d4">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2314110e'/%3E%3Cpath d='M16 6 26 16 16 26 6 16Z' fill='%23e8590c'/%3E%3C/svg%3E">
+<script>
+  (function () {
+    try {
+      var stored = localStorage.getItem("synthwire-theme");
+      var forced = new URLSearchParams(window.location.search).get("theme");
+      if (forced === "dark" || forced === "light") stored = forced;
+      var dark = stored === "dark" || (!stored && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+    } catch (error) {
+      document.documentElement.dataset.theme = "light";
+    }
+  })();
+</script>
 <style>
+  /* ------------------------------------------------------------------
+     Synthwire landing: warm brutalist type on a liquid-glass material.
+     Glass is a real system here: outer shell, readable scrim plate,
+     specular rim, refracted warm light. Typography and orange accent are
+     carried over from the original identity.
+     ------------------------------------------------------------------ */
+  @font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url("fonts/inter.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Playfair Display";
+    font-style: normal;
+    font-weight: 400 900;
+    font-display: swap;
+    src: url("fonts/playfair-display.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "JetBrains Mono";
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url("fonts/jetbrains-mono.woff2") format("woff2");
+  }
+
   :root {
-    --page: #f2ead6;
+    color-scheme: light;
+    --page: #ede3d0;
     --paper: #fffdf6;
-    --paper-sunken: #f7f0dd;
     --ink: #14110e;
-    --ink-muted: #5a5348;
-    --rule: #14110e;
+    --ink-muted: #5b5142;
     --accent: #e8590c;
+    --accent-strong: #c44908;
+    --accent-text: #9f3c0a;
     --accent-ink: #14110e;
-    --accent-text: #a8400a;
+    --rule: rgba(20, 17, 14, 0.14);
+    --rule-strong: rgba(20, 17, 14, 0.55);
+    --focus: #a8400a;
+    --glass: linear-gradient(150deg, rgba(255, 253, 248, 0.6), rgba(255, 244, 229, 0.38));
+    --glass-strong: linear-gradient(150deg, rgba(255, 253, 248, 0.86), rgba(255, 245, 232, 0.68));
+    --glass-border: rgba(255, 255, 255, 0.94);
+    --glass-edge: rgba(255, 255, 255, 0.98);
+    --glass-shadow: rgba(73, 47, 20, 0.24);
+    --glass-fallback: #fbf5e8;
+    --grid: rgba(20, 17, 14, 0.06);
+    --noise-opacity: 0.035;
+    --noise-blend: multiply;
+    --orb-a: #ffc59c;
+    --orb-b: #ffe3c2;
+    --orb-c: #a9cedb;
     --serif: "Playfair Display", Georgia, "Times New Roman", serif;
     --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
     --sans: "Inter", -apple-system, "Segoe UI", system-ui, Roboto, Helvetica, Arial, sans-serif;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
   }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0c0907;
+    --paper: #17110d;
+    --ink: #f6ecdc;
+    --ink-muted: #c8b7a1;
+    --accent: #ff6a1a;
+    --accent-strong: #ff8a45;
+    --accent-text: #ff9a5c;
+    --accent-ink: #1a0f08;
+    --rule: rgba(246, 236, 220, 0.16);
+    --rule-strong: rgba(246, 236, 220, 0.55);
+    --focus: #ff9a5c;
+    --glass: linear-gradient(150deg, rgba(62, 42, 27, 0.58), rgba(16, 12, 9, 0.4));
+    --glass-strong: linear-gradient(150deg, rgba(37, 27, 19, 0.93), rgba(15, 11, 8, 0.84));
+    --glass-border: rgba(255, 207, 160, 0.28);
+    --glass-edge: rgba(255, 218, 175, 0.42);
+    --glass-shadow: rgba(0, 0, 0, 0.62);
+    --glass-fallback: #19130e;
+    --grid: rgba(246, 236, 220, 0.05);
+    --noise-opacity: 0.055;
+    --noise-blend: screen;
+    --orb-a: #a63c08;
+    --orb-b: #6e4611;
+    --orb-c: #1f3a40;
+  }
+
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; background: var(--page); }
   body {
     margin: 0;
-    background: var(--page);
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: transparent;
     color: var(--ink);
     font-family: var(--sans);
     font-size: 1rem;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.4s var(--ease), color 0.4s var(--ease);
   }
+  ::selection { background: var(--accent); color: var(--accent-ink); }
   a { color: var(--accent-text); text-underline-offset: 3px; }
-  a:focus-visible, button:focus-visible { outline: 3px solid var(--accent-text); outline-offset: 3px; }
-  .skip-link { position: absolute; left: -9999px; top: 0; background: var(--paper); padding: .5rem; z-index: 6; }
-  .skip-link:focus { left: .5rem; }
-  .wrap { width: min(64rem, 100%); margin: 0 auto; padding: 0 1.25rem; }
-  header.site { border-bottom: 2px solid var(--rule); background: var(--page); --slop-allow: redundant-border; }
-  .site__inner {display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: .875rem}
-  .brand { display: inline-flex; align-items: center; gap: .5rem; font-family: var(--mono); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; font-size: .8125rem; color: var(--ink); text-decoration: none; }
-  .brand__mark { color: var(--accent-text); }
-  nav.main { display: flex; gap: 1rem; flex-wrap: wrap; }
-  nav.main a { font-family: var(--mono); font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); text-decoration: none; border-bottom: 2px solid transparent; padding: .25rem 0; }
-  nav.main a:hover, nav.main a:focus-visible { border-bottom-color: var(--accent); }
-  main { padding: 2.5rem 0 3.5rem; }
-  .eyebrow { font-family: var(--mono); font-size: .6875rem; letter-spacing: .18em; text-transform: uppercase; color: var(--accent-text); margin: 0 0 .75rem; }
-  h1 { font-family: var(--serif); font-size: clamp(2.25rem, 7vw, 4rem); line-height: 1.03; margin: 0 0 1rem; max-width: 18ch; }
-  .lede { font-size: 1.0625rem; line-height: 1.6; color: var(--ink-muted); max-width: 38rem; margin: 0 0 1.5rem; }
-  .actions { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; }
-  .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 2.875rem; padding: .625rem 1rem; border: 2px solid var(--rule); background: var(--paper); color: var(--ink); font-family: var(--mono); font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; box-shadow: 3px 3px 0 var(--rule); transition: transform .15s ease, box-shadow .15s ease; }
-  .btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--rule); }
-  .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--rule); }
-  .btn--primary { background: var(--accent); border-color: var(--accent); }
-  .fineprint { font-family: var(--mono); font-size: .6875rem; color: var(--ink-muted); margin: 0 0 2.5rem; }
-  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; margin: 0 0 3rem; padding: 0; list-style: none; }
-  .stat { border: 2px solid var(--rule); background: var(--paper); box-shadow: 4px 4px 0 var(--rule); padding: .75rem; --slop-allow: redundant-border; }
-  .stat strong { display: block; font-family: var(--serif); font-size: 1.75rem; line-height: 1; }
-  .stat span { display: block; font-family: var(--mono); font-size: .625rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-muted); margin-top: .375rem; }
-  h2 { font-family: var(--serif); font-size: clamp(1.75rem, 4vw, 2.5rem); line-height: 1.1; margin: 0 0 .75rem; }
-  .section { margin-top: 3rem; }
-  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.5rem; }
-  .card { border: 2px solid var(--rule); background: var(--paper); box-shadow: 5px 5px 0 var(--rule); padding: 1.125rem; --slop-allow: redundant-border; }
-  .card--wide { grid-column: 1 / -1; }
-  .card h3 { font-family: var(--serif); font-size: 1.375rem; line-height: 1.15; margin: 0 0 .5rem; }
-  .card p { margin: 0; color: var(--ink-muted); font-size: .9375rem; line-height: 1.55; }
-  .tag { display: inline-block; font-family: var(--mono); font-size: .625rem; letter-spacing: .1em; text-transform: uppercase; padding: .1875rem .375rem; border: 2px solid var(--accent); background: var(--accent); color: var(--accent-ink); margin-bottom: .625rem; --slop-allow: redundant-border; }
-  .download { border: 2px solid var(--rule); background: var(--paper); box-shadow: 6px 6px 0 var(--rule); padding: 1.25rem; margin-top: 1.25rem; --slop-allow: redundant-border; }
-  .download h3 { font-family: var(--serif); font-size: 1.5rem; margin: 0 0 .25rem; }
-  .download p { color: var(--ink-muted); font-size: .9375rem; margin: 0 0 1rem; }
-  .meta { font-family: var(--mono); font-size: .6875rem; color: var(--ink-muted); margin: .875rem 0 0; line-height: 1.6; }
-  .data { border-top: 2px solid var(--rule); border-bottom: 2px solid var(--rule); padding: 1rem 0; margin-top: 3rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; align-items: center; }
-  .data p { margin: 0; color: var(--ink-muted); font-size: .9375rem; max-width: 36rem; }
-  footer.site { border-top: 2px solid var(--rule); background: var(--page); padding: 1.25rem 0 2rem; --slop-allow: redundant-border; }
-  .footer__inner { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; align-items: flex-start; }
-  .footer__links { display: flex; gap: 1rem; flex-wrap: wrap; }
-  .footer__links a { font-family: var(--mono); font-size: .6875rem; color: var(--ink); }
-  .colophon { font-family: var(--mono); font-size: 12px; color: var(--ink-muted); margin: 1rem 0 0; }
-  @media (max-width: 640px) {
-    .grid { grid-template-columns: 1fr; }
+  a:hover { color: var(--accent-strong); }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+  .skip-link { position: absolute; left: -9999px; top: 0; z-index: 100; background: var(--glass-fallback); padding: 0.6rem 0.9rem; border-radius: 0 0 0.6rem 0; }
+  .skip-link:focus { left: 0; }
+
+  /* Atmosphere: the light the glass has to refract. */
+  .atmosphere { position: fixed; inset: 0; z-index: -3; overflow: hidden; background: var(--page); transition: background 0.4s var(--ease); }
+  .orb { position: absolute; border-radius: 50%; filter: blur(68px); opacity: 0.62; will-change: transform; pointer-events: none; }
+  .orb--a { width: 44rem; height: 44rem; top: -14rem; right: -10rem; background: radial-gradient(circle at 38% 38%, var(--orb-a), transparent 66%); animation: drift-a 26s ease-in-out infinite alternate; }
+  .orb--b { width: 36rem; height: 36rem; left: -12rem; top: 26%; background: radial-gradient(circle at 55% 45%, var(--orb-b), transparent 66%); opacity: 0.52; animation: drift-b 33s ease-in-out infinite alternate; }
+  .orb--c { width: 42rem; height: 42rem; left: 30%; bottom: -20rem; background: radial-gradient(circle at 45% 45%, var(--orb-c), transparent 66%); opacity: 0.42; animation: drift-c 29s ease-in-out infinite alternate; }
+  .atmosphere::after {
+    content: ""; position: absolute; width: 52rem; height: 52rem; left: -12%; top: -20%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.5), transparent 64%);
+    filter: blur(36px); pointer-events: none;
+  }
+  .gridlines {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 68px 68px;
+    -webkit-mask-image: radial-gradient(ellipse at 50% 18%, #000 18%, transparent 74%);
+    mask-image: radial-gradient(ellipse at 50% 18%, #000 18%, transparent 74%);
+  }
+  .noise {
+    position: fixed; inset: 0; z-index: -2; pointer-events: none;
+    opacity: var(--noise-opacity);
+    mix-blend-mode: var(--noise-blend);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+  }
+  body.is-paused .orb,
+  body.is-paused .stage__shell::after,
+  body.is-paused .stage__live-dot { animation-play-state: paused; }
+
+  @keyframes drift-a { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(-4%, 7%, 0) scale(1.08); } }
+  @keyframes drift-b { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(6%, -5%, 0) scale(1.05); } }
+  @keyframes drift-c { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(-6%, -4%, 0) scale(1.1); } }
+
+  .wrap { position: relative; width: min(72rem, 100%); margin-inline: auto; padding-inline: clamp(1.25rem, 4vw, 2.5rem); }
+
+  /* Header */
+  .site-header {
+    --slop-allow: redundant-border;
+    position: sticky; top: 0; z-index: 40;
+    background: color-mix(in srgb, var(--page) 68%, transparent);
+    -webkit-backdrop-filter: blur(18px) saturate(1.5);
+    backdrop-filter: blur(18px) saturate(1.5);
+    border-bottom: 1px solid var(--rule);
+    transition: background 0.35s var(--ease), box-shadow 0.35s var(--ease);
+  }
+  .site-header.is-scrolled {
+    background: color-mix(in srgb, var(--page) 86%, transparent);
+    box-shadow: 0 20px 50px -42px var(--glass-shadow);
+  }
+  .header__inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 0.85rem; }
+  .header__right { display: flex; align-items: center; gap: clamp(0.75rem, 2.5vw, 1.5rem); min-width: 0; }
+  .brand { display: inline-flex; align-items: center; gap: 0.55rem; color: var(--ink); text-decoration: none; font-family: var(--mono); font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; white-space: nowrap; }
+  .brand__mark { width: 0.58rem; height: 0.58rem; background: var(--accent); transform: rotate(45deg); box-shadow: 0 1px 2px rgba(20, 17, 14, 0.16); flex: 0 0 auto; }
+  .nav { display: flex; align-items: center; gap: clamp(0.75rem, 2.4vw, 1.4rem); flex-wrap: wrap; }
+  .nav a { color: var(--ink); text-decoration: none; font-family: var(--mono); font-size: 0.6875rem; letter-spacing: 0.11em; text-transform: uppercase; padding-block: 0.35rem; border-bottom: 1px solid transparent; transition: color 0.2s ease, border-color 0.2s ease; }
+  .nav a:hover, .nav a:focus-visible { color: var(--accent-text); border-bottom-color: var(--accent); }
+  .theme-toggle {
+    --slop-allow: redundant-border heavy-box-shadow;
+    position: relative; width: 2.5rem; height: 2.5rem; flex: 0 0 auto;
+    display: grid; place-items: center; cursor: pointer;
+    border: 1px solid var(--glass-border); border-radius: 999px;
+    background: var(--glass); color: var(--ink);
+    -webkit-backdrop-filter: blur(14px) saturate(1.5); backdrop-filter: blur(14px) saturate(1.5);
+    box-shadow: inset 0 1px 0 var(--glass-edge), 0 10px 24px -18px var(--glass-shadow);
+    transition: background 0.25s ease, transform 0.2s var(--ease);
+  }
+  .theme-toggle:hover { transform: translateY(-1px); }
+  .theme-toggle:active { transform: scale(0.96); }
+  .theme-toggle svg { position: absolute; width: 1.05rem; height: 1.05rem; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; transition: opacity 0.25s ease, transform 0.45s var(--ease); }
+  .theme-toggle .icon--moon { opacity: 1; transform: rotate(0) scale(1); }
+  .theme-toggle .icon--sun { opacity: 0; transform: rotate(-40deg) scale(0.72); }
+  :root[data-theme="dark"] .theme-toggle .icon--moon { opacity: 0; transform: rotate(40deg) scale(0.72); }
+  :root[data-theme="dark"] .theme-toggle .icon--sun { opacity: 1; transform: rotate(0) scale(1); }
+
+  /* Shared glass material */
+  .glass {
+    --slop-allow: redundant-border heavy-box-shadow;
+    position: relative;
+    border: 1px solid var(--glass-border);
+    border-radius: 1.5rem;
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(22px) saturate(1.6);
+    backdrop-filter: blur(22px) saturate(1.6);
+    box-shadow:
+      inset 0 1px 0 var(--glass-edge),
+      inset 0 -1px 0 rgba(95, 62, 26, 0.055),
+      0 0 0 1px color-mix(in srgb, var(--ink) 7%, transparent),
+      0 36px 74px -42px var(--glass-shadow),
+      0 6px 18px -12px var(--glass-shadow);
+  }
+  .glass::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+    background: linear-gradient(142deg, #fff, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0) 60%, color-mix(in srgb, var(--accent) 30%, white));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 1;
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass, .site-header, .theme-toggle { background: var(--glass-fallback); }
+  }
+
+  /* Hero */
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+    align-items: center;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    padding-block: clamp(2.5rem, 6vw, 5rem) clamp(2rem, 4vw, 3rem);
+  }
+  .hero__copy { position: relative; z-index: 2; }
+  .hero h1 {
+    margin: 0 0 1.25rem;
+    max-width: 14ch;
+    font-family: var(--serif);
+    font-size: clamp(2.6rem, 5.4vw, 4.35rem);
+    font-weight: 600;
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+  .lede {
+    margin: 0 0 1.75rem;
+    max-width: 33rem;
+    color: var(--ink-muted);
+    font-size: clamp(1rem, 1.25vw, 1.125rem);
+    line-height: 1.62;
+    text-wrap: pretty;
+  }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .btn {
+    --slop-allow: redundant-border heavy-box-shadow;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+    min-height: 3rem; padding: 0.7rem 1.2rem;
+    border: 1px solid var(--glass-border); border-radius: 999px;
+    background: var(--glass); color: var(--ink);
+    font-family: var(--mono); font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase; text-decoration: none;
+    -webkit-backdrop-filter: blur(16px) saturate(1.6); backdrop-filter: blur(16px) saturate(1.6);
+    box-shadow: inset 0 1px 0 var(--glass-edge), 0 16px 34px -28px var(--glass-shadow);
+    transition: transform 0.18s var(--ease), background 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+  }
+  .btn:hover { transform: translateY(-2px); background: var(--glass-strong); color: var(--ink); box-shadow: inset 0 1px 0 var(--glass-edge), 0 22px 38px -26px var(--glass-shadow); }
+  .btn:active { transform: translateY(0) scale(0.985); }
+  .btn--primary {
+    color: var(--accent-ink); border-color: color-mix(in srgb, var(--accent) 72%, white);
+    background: linear-gradient(150deg, var(--accent), var(--accent-strong));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 16px 32px -24px rgba(20, 17, 14, 0.28);
+  }
+  .btn--primary:hover { color: var(--accent-ink); background: linear-gradient(150deg, color-mix(in srgb, var(--accent) 88%, white), var(--accent)); }
+  .fineprint { margin: 1rem 0 0; color: var(--ink-muted); font-family: var(--mono); font-size: 0.6875rem; line-height: 1.7; letter-spacing: 0.02em; }
+
+  /* Liquid-glass stage */
+  .stage-wrap { display: grid; place-items: center; min-height: 34rem; perspective: 1500px; }
+  .stage { position: relative; width: min(100%, 33rem); min-height: 33rem; }
+  .stage__scene { position: relative; min-height: 33rem; transform-style: preserve-3d; transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.35s var(--ease); }
+  .stage__glow {
+    position: absolute; inset: 8% -4% 2% 2%;
+    background:
+      radial-gradient(closest-side at 62% 38%, color-mix(in srgb, var(--accent) 46%, transparent), transparent 70%),
+      radial-gradient(closest-side at 35% 78%, rgba(255, 224, 174, 0.6), transparent 65%);
+    filter: blur(46px); opacity: 0.9; pointer-events: none;
+  }
+  .stage__plate {
+    --slop-allow: redundant-border heavy-box-shadow;
+    position: absolute; pointer-events: none;
+    border: 1px solid var(--glass-border); border-radius: 2.25rem;
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(18px) saturate(1.5); backdrop-filter: blur(18px) saturate(1.5);
+    box-shadow: inset 0 1px 0 var(--glass-edge), 0 0 0 1px color-mix(in srgb, var(--ink) 6%, transparent), 0 36px 70px -44px var(--glass-shadow);
+    animation: plate-in 1s var(--ease) both;
+  }
+  .stage__plate--far { --rot: 5.5deg; --op: 0.7; inset: 3.4rem -2rem -0.9rem 3rem; animation-delay: 0.1s; }
+  .stage__plate--near { --rot: -2.8deg; --op: 0.86; inset: 1.9rem -0.7rem -0.1rem 1.2rem; animation-delay: 0.2s; }
+  .stage__shell {
+    --slop-allow: redundant-border heavy-box-shadow nested-cards;
+    position: relative; z-index: 2;
+    margin: 2.3rem 1.6rem 1.3rem 0;
+    padding: 0.62rem; border-radius: 2.5rem;
+    background: linear-gradient(150deg, var(--glass-edge), rgba(255, 255, 255, 0.05) 38%, var(--glass-border) 72%, color-mix(in srgb, var(--accent) 26%, transparent));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 7%, transparent), inset 0 1px 0 #fff, inset 2px 0 10px rgba(255, 176, 110, 0.16), inset -2px 0 10px rgba(140, 200, 220, 0.13), 0 52px 110px -42px var(--glass-shadow), 0 8px 28px -14px var(--glass-shadow);
+    -webkit-backdrop-filter: blur(24px) saturate(1.5); backdrop-filter: blur(24px) saturate(1.5);
+    animation: shell-in 0.95s var(--ease) both 0.28s;
+  }
+  .stage__scrim {
+    position: relative; overflow: hidden;
+    padding: clamp(1.1rem, 2.4vw, 1.6rem);
+    border-radius: 1.95rem;
+    background:
+      radial-gradient(120% 80% at 12% 0%, rgba(255, 255, 255, 0.58), transparent 48%),
+      radial-gradient(90% 70% at 92% 100%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 58%),
+      var(--glass-strong);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75), inset 0 -1px 0 rgba(90, 60, 26, 0.06);
+    --slop-allow: nested-cards;
+    -webkit-backdrop-filter: blur(30px) saturate(1.7); backdrop-filter: blur(30px) saturate(1.7);
+  }
+  .stage::after {
+    content: ""; position: absolute; left: 12%; right: 4%; bottom: -2rem; height: 3rem; z-index: 0;
+    background: rgba(54, 33, 12, 0.28); border-radius: 50%; filter: blur(26px); pointer-events: none;
+  }
+  .stage__glint {
+    position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 1;
+    background: radial-gradient(17rem circle at var(--mx, 68%) var(--my, 18%), rgba(255, 255, 255, 0.45), transparent 62%);
+    opacity: 0; transition: opacity 0.35s ease; mix-blend-mode: soft-light;
+  }
+  .stage__scene:hover .stage__glint { opacity: 1; }
+  .stage__shell::after {
+    content: ""; position: absolute; inset: 0; z-index: 3; border-radius: inherit; pointer-events: none;
+    background: linear-gradient(115deg, transparent 24%, rgba(255, 255, 255, 0.48) 42%, rgba(255, 255, 255, 0.06) 52%, transparent 68%);
+    transform: translateX(-140%) skewX(-10deg);
+    animation: sheen 9s var(--ease) 1.6s infinite;
+    opacity: 0.55; mix-blend-mode: screen;
+  }
+  .stage__top { display: flex; align-items: center; gap: 0.6rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--rule); }
+  .stage__mark { width: 0.52rem; height: 0.52rem; flex: 0 0 auto; background: var(--accent); transform: rotate(45deg); box-shadow: 0 1px 2px rgba(20, 17, 14, 0.16); }
+  .stage__label { margin: 0; font-family: var(--mono); font-size: 0.625rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-muted); }
+  .stage__live { margin-left: auto; display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--mono); font-size: 0.625rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-text); }
+  .stage__live-dot { width: 0.4rem; height: 0.4rem; border-radius: 50%; background: var(--accent); animation: live-pulse 2.8s var(--ease) infinite; }
+  .stage__title { margin: 1rem 0 0.2rem; font-family: var(--serif); font-size: clamp(1.55rem, 3vw, 2rem); font-weight: 600; line-height: 1.05; letter-spacing: -0.015em; }
+  .stage__sub { margin: 0; font-size: 0.8125rem; line-height: 1.5; color: var(--ink-muted); }
+  .stage__list { list-style: none; margin: 0.55rem 0 0; padding: 0; }
+  .stage__item { padding: 0.8rem 0; border-top: 1px solid var(--rule); }
+  .stage__item:first-child { border-top: 0; }
+  .stage__meta { display: flex; justify-content: space-between; gap: 1rem; font-family: var(--mono); font-size: 0.625rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); }
+  .stage__cat { color: var(--accent-text); }
+  .stage__issue { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 0.18rem; font-family: var(--serif); font-size: 1.02rem; line-height: 1.28; color: var(--ink); }
+  .stage__foot { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 0.25rem; padding-top: 0.9rem; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; color: var(--ink-muted); }
+  .stage__pill { --slop-allow: redundant-border; padding: 0.18rem 0.5rem; border-radius: 999px; border: 1px solid var(--glass-border); background: var(--glass); color: var(--accent-text); }
+
+  /* Stats rail */
+  .stats {
+    list-style: none; margin: 0 0 clamp(3rem, 7vw, 5rem); padding: 0;
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    overflow: hidden;
+  }
+  .stat { padding: 1.15rem clamp(1rem, 2.4vw, 1.75rem); border-left: 1px solid var(--rule); }
+  .stat:first-child { border-left: 0; }
+  .stat strong { display: block; font-family: var(--serif); font-size: clamp(1.4rem, 2.6vw, 2rem); font-weight: 600; line-height: 1; letter-spacing: -0.02em; }
+  .stat span { display: block; margin-top: 0.4rem; font-family: var(--mono); font-size: 0.625rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-muted); }
+
+  /* Sections */
+  .section { margin-top: clamp(3.5rem, 8vw, 6rem); }
+  .section h2 { margin: 0; font-family: var(--serif); font-size: clamp(2rem, 4.8vw, 3.4rem); font-weight: 600; line-height: 1.02; letter-spacing: -0.02em; text-wrap: balance; max-width: 15ch; }
+  .features { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1rem; margin-top: 1.75rem; }
+  .feature {
+    grid-column: span 2; min-height: 0; padding: 1.4rem;
+    overflow: hidden;
+    border-radius: 1.5rem;
+  }
+  .feature--wide { grid-column: span 3; min-height: 0; }
+  .feature h3 { margin: 0 0 0.45rem; font-family: var(--serif); font-size: 1.5rem; font-weight: 600; line-height: 1.1; letter-spacing: -0.01em; }
+  .feature p { margin: 0; max-width: 35ch; color: var(--ink-muted); font-size: 0.9375rem; line-height: 1.55; }
+  .feature__row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.45rem; }
+  .feature__row h3 { margin: 0; }
+  .status { --slop-allow: redundant-border; display: inline-flex; align-items: center; gap: 0.38rem; padding: 0.18rem 0.48rem; border: 1px solid var(--glass-border); border-radius: 999px; background: var(--glass); color: var(--accent-text); font-family: var(--mono); font-size: 0.625rem; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+  .status__dot { width: 0.36rem; height: 0.36rem; border-radius: 50%; background: var(--accent); animation: live-pulse 2.8s var(--ease) infinite; }
+
+  /* Download */
+  .download {
+    margin-top: 1.75rem; padding: clamp(1.5rem, 3.5vw, 2.75rem);
+    border-radius: 2rem; overflow: hidden;
+  }
+  .download__grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(12rem, 0.7fr); gap: clamp(1.5rem, 4vw, 3rem); align-items: center; }
+  .download h3 { margin: 0 0 0.5rem; font-family: var(--serif); font-size: clamp(1.65rem, 3vw, 2.25rem); font-weight: 600; line-height: 1.05; letter-spacing: -0.015em; }
+  .download p { margin: 0 0 1.4rem; max-width: 34rem; color: var(--ink-muted); font-size: 0.9375rem; }
+  .download__meta { border-top: 1px solid var(--rule); padding-top: 1rem; color: var(--ink-muted); font-family: var(--mono); font-size: 0.6875rem; line-height: 1.75; overflow-wrap: anywhere; }
+  .download__meta strong { display: block; margin-bottom: 0.35rem; color: var(--ink); font-size: 0.625rem; letter-spacing: 0.12em; text-transform: uppercase; }
+
+  /* Data strip */
+  .data {
+    margin-top: clamp(2rem, 5vw, 3.5rem); padding: 1.25rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;
+    border-radius: 1.5rem;
+  }
+  .data p { margin: 0; max-width: 40rem; color: var(--ink-muted); font-size: 0.9375rem; }
+  .data strong { color: var(--ink); }
+
+  /* Footer */
+  .site-footer { margin-top: clamp(3rem, 8vw, 6rem); border-top: 1px solid var(--rule); padding: 1.5rem 0 2rem; }
+  .footer__inner { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .footer__note { margin: 0.65rem 0 0; color: var(--ink-muted); font-family: var(--mono); font-size: 0.6875rem; }
+  .footer__links { display: flex; gap: 1.25rem; flex-wrap: wrap; }
+  .footer__links a { color: var(--ink); font-family: var(--mono); font-size: 0.6875rem; letter-spacing: 0.06em; text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 0.15rem; }
+  .footer__links a:hover { color: var(--accent-text); border-bottom-color: var(--accent); }
+  .colophon { margin: 1.1rem 0 0; color: var(--ink-muted); font-family: var(--mono); font-size: 0.6875rem; }
+
+  /* Reveal: only the feature list and download panel, never every section. */
+  html.js .reveal { opacity: 0; transform: translateY(16px); }
+  html.js .reveal.is-in { opacity: 1; transform: translateY(0); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); transition-delay: var(--d, 0s); }
+  .features .feature:nth-child(2) { --d: 0.06s; }
+  .features .feature:nth-child(3) { --d: 0.12s; }
+  .features .feature:nth-child(4) { --d: 0.18s; }
+  .features .feature:nth-child(5) { --d: 0.24s; }
+
+  @keyframes plate-in {
+    from { opacity: 0; transform: translateY(26px) rotate(var(--rot, 0deg)) scale(0.96); filter: blur(9px); }
+    to { opacity: var(--op, 1); transform: translateY(0) rotate(var(--rot, 0deg)) scale(1); filter: blur(0); }
+  }
+  @keyframes shell-in {
+    from { opacity: 0; transform: translateY(22px) scale(0.975); filter: blur(7px); }
+    to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  }
+  @keyframes sheen {
+    0%, 18% { transform: translateX(-140%) skewX(-10deg); opacity: 0; }
+    38% { opacity: 0.55; }
+    58%, 100% { transform: translateX(140%) skewX(-10deg); opacity: 0; }
+  }
+  @keyframes live-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent); }
+    50% { box-shadow: 0 0 0 0.32rem transparent; }
+  }
+
+  @media (max-width: 1000px) {
+    .hero { grid-template-columns: minmax(0, 1fr); gap: 2rem; padding-top: 2.25rem; }
+    .hero h1 { max-width: 16ch; }
+    .stage-wrap { min-height: 31rem; margin-top: 0.5rem; }
+    .stage { width: min(100%, 31rem); }
+    .stage__scene, .stage { min-height: 30rem; }
+    .download__grid { grid-template-columns: 1fr; }
+    .download__meta { max-width: 34rem; }
+  }
+  @media (max-width: 760px) {
+    .features { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .feature, .feature--wide { grid-column: span 1; }
+    .feature--wide { grid-column: span 2; }
     .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .site__inner { flex-wrap: wrap; }
+    .stat:nth-child(3) { border-left: 0; }
+    .stat:nth-child(n + 3) { border-top: 1px solid var(--rule); }
+    .header__inner { flex-wrap: wrap; }
+    .header__right { margin-left: auto; }
+    .stage-wrap { min-height: 28rem; }
+    .stage { width: min(100%, 28rem); min-height: 27rem; }
+    .stage__scene { min-height: 27rem; }
+    .stage__plate--far { inset: 2.2rem -0.25rem 0 2rem; }
+    .stage__plate--near { inset: 1.2rem 0.6rem 0.5rem 0.8rem; }
+  }
+  @media (max-width: 540px) {
+    .nav { gap: 0.75rem; }
+    .nav a { font-size: 12px; }
+    .hero h1 { font-size: clamp(2.55rem, 12vw, 3.4rem); max-width: 13ch; }
+    .actions { flex-direction: column; align-items: stretch; }
+    .btn { width: 100%; }
+    .stage-wrap { min-height: 25rem; }
+    .stage { min-height: 24rem; }
+    .stage__scene { min-height: 24rem; }
+    .stage__title { font-size: 1.45rem; }
+    .stage__issue { font-size: 0.95rem; }
+    .stage__plate--far { inset: 1.8rem 0.2rem 0 1.4rem; }
+    .stage__plate--near { inset: 1rem 0.55rem 0.4rem 0.6rem; }
+    .header__inner { align-items: flex-start; }
+    .header__right { width: 100%; justify-content: space-between; margin-left: 0; padding-top: 0.35rem; }
+    .nav { gap: 0.8rem; }
+    .theme-toggle { width: 2.25rem; height: 2.25rem; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .feature, .feature--wide { grid-column: span 2; min-height: 0; }
+    .footer__inner { flex-direction: column; }
+    .orb { filter: blur(60px); }
+    .site-header { -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); }
+    .glass { -webkit-backdrop-filter: blur(16px) saturate(1.45); backdrop-filter: blur(16px) saturate(1.45); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+    .orb, .stage__shell::after, .stage__live-dot, .status__dot { animation: none !important; }
+    html.js .reveal { opacity: 1; transform: none; }
   }
 </style>
-<style id="gesso-text-wrap">h1,h2,h3{text-wrap:balance}p,li,figcaption,blockquote{text-wrap:pretty}</style>
-<style id="gesso-font-smoothing">html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>
 </head>
 <body>
+<div class="atmosphere" aria-hidden="true">
+  <div class="orb orb--a"></div>
+  <div class="orb orb--b"></div>
+  <div class="orb orb--c"></div>
+  <div class="gridlines"></div>
+</div>
+<div class="noise" aria-hidden="true"></div>
 <a class="skip-link" href="#main">Skip to content</a>
 
-<header class="site">
-  <div class="wrap site__inner">
-    <a class="brand" href="./"><span class="brand__mark" aria-hidden="true">&#9672;</span> Synthwire</a>
-    <nav class="main" aria-label="Main">
-      <a href="#download">Download</a>
-      <a href="#features">Features</a>
-      <a href="https://app.opzay.com">Web app</a>
-      <a href="./synthwire.json">Data</a>
-    </nav>
+<header class="site-header">
+  <div class="wrap header__inner">
+    <a class="brand" href="./" aria-label="Synthwire home">
+      <span class="brand__mark" aria-hidden="true"></span>
+      Synthwire
+    </a>
+    <div class="header__right">
+      <nav class="nav" aria-label="Main">
+        <a href="#download">Download</a>
+        <a href="#features">Features</a>
+        <a href="https://app.opzay.com">Web app</a>
+        <a href="./synthwire.json">Data</a>
+      </nav>
+      <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch to dark theme" aria-pressed="false">
+        <svg class="icon icon--moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        <svg class="icon icon--sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"/></svg>
+      </button>
+    </div>
   </div>
 </header>
 
 <main id="main">
   <div class="wrap">
-    <p class="eyebrow">Android &middot; no account &middot; no ads &middot; no tracking</p>
-    <h1>A private, family-friendly reader for the newsletters you follow.</h1>
-    <p class="lede">
-      Recent issues from the public feeds of 100 newsletters, collected into one digest.
-      Search the catalog, follow what matters, and read every issue in a quiet in-app reader.
-      Everything is free. No ads, ever.
-    </p>
-    <div class="actions">
-      <a class="btn btn--primary" href="https://github.com/overmydragon/synthwire-web/releases/latest/download/app-universal-release.apk">Download the APK</a>
-      <a class="btn" href="https://app.opzay.com">Open the web app</a>
-    </div>
-    <p class="fineprint">Android 7.0+ &middot; arm64-v8a and x86_64 &middot; version 0.6.1 &middot; no account required</p>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero__copy">
+        <h1 id="hero-title">A private, family-friendly reader for the newsletters you follow.</h1>
+        <p class="lede">
+          Recent issues from the public feeds of 100 newsletters, collected into one digest.
+          Search the catalog, follow what matters, and read every issue in a quiet in-app reader.
+          Everything is free. No ads, ever.
+        </p>
+        <div class="actions">
+          <a class="btn btn--primary" href="https://github.com/overmydragon/synthwire-web/releases/latest/download/app-universal-release.apk">Download the APK</a>
+          <a class="btn" href="https://app.opzay.com">Open the web app</a>
+        </div>
+        <p class="fineprint">Android 7.0+ &middot; arm64-v8a and x86_64 &middot; version 0.6.1 &middot; no account required</p>
+      </div>
 
-    <ul class="stats" aria-label="At a glance">
+      <div class="stage-wrap" aria-hidden="true">
+        <div class="stage">
+          <div class="stage__scene">
+            <div class="stage__glow"></div>
+            <div class="stage__plate stage__plate--far" data-slop-allow="heavy-box-shadow redundant-border"></div>
+            <div class="stage__plate stage__plate--near" data-slop-allow="heavy-box-shadow redundant-border"></div>
+            <div class="stage__shell" data-slop-allow="nested-cards heavy-box-shadow redundant-border">
+              <div class="stage__scrim" data-slop-allow="nested-cards">
+                <div class="stage__glint"></div>
+                <div class="stage__top">
+                  <span class="stage__mark"></span>
+                  <p class="stage__label">Synthwire digest</p>
+                  <span class="stage__live" data-slop-allow="live-clock-eyebrow"><span class="stage__live-dot"></span>Live</span>
+                </div>
+                <h3 class="stage__title">Today&rsquo;s digest</h3>
+                <p class="stage__sub">Recent issues from the newsletters you follow.</p>
+                <ul class="stage__list">
+                  <li class="stage__item">
+                    <p class="stage__meta"><span>Quanta Magazine</span><span class="stage__cat">Science</span></p>
+                    <span class="stage__issue">Can Network Science Transform Health and Nutrition?</span>
+                  </li>
+                  <li class="stage__item">
+                    <p class="stage__meta"><span>Ars Technica</span><span class="stage__cat">Tech</span></p>
+                    <span class="stage__issue">SpaceX returned its Starship rocket on Saturday, but there&rsquo;s a catch</span>
+                  </li>
+                  <li class="stage__item">
+                    <p class="stage__meta"><span>Dense Discovery</span><span class="stage__cat">Design</span></p>
+                    <span class="stage__issue">DD414 / Organising the discontent</span>
+                  </li>
+                </ul>
+                <div class="stage__foot"><span>100 newsletters</span><span class="stage__pill">Free &middot; no ads</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <ul class="stats glass reveal" aria-label="At a glance">
       <li class="stat"><strong>100</strong><span>newsletters</span></li>
       <li class="stat"><strong>5</strong><span>themes</span></li>
       <li class="stat"><strong>0</strong><span>ads, ever</span></li>
@@ -123,67 +593,72 @@
     </ul>
 
     <section class="section" id="features" aria-labelledby="features-title">
-      <p class="eyebrow">What you get</p>
       <h2 id="features-title">Built like a tool, not a feed.</h2>
-      <div class="grid">
-        <article class="card">
+      <div class="features">
+        <article class="feature feature--wide glass reveal">
           <h3>Digest</h3>
           <p>A stream of the latest issues across the catalog, newest first. Open any issue and read it without leaving the app.</p>
         </article>
-        <article class="card">
+        <article class="feature feature--wide glass reveal">
           <h3>Catalog</h3>
           <p>100 newsletters, with categories, search and one-tap following.</p>
         </article>
-        <article class="card">
+        <article class="feature glass reveal">
           <h3>Reader</h3>
           <p>Clean, sanitized article text with S/M/L/XL sizes, a reading-progress bar and source previews on press and hold.</p>
         </article>
-        <article class="card">
+        <article class="feature glass reveal">
           <h3>Library</h3>
           <p>Bookmarks, highlights and notes, snapshots, collections and exports. Free, and stored on your device.</p>
         </article>
-        <article class="card card--wide">
-          <span class="tag" data-slop-allow="live-clock-eyebrow">Live</span>
-          <h3>Live updates</h3>
+        <article class="feature glass reveal">
+          <div class="feature__row">
+            <h3>Live updates</h3>
+            <span class="status" data-slop-allow="live-clock-eyebrow"><span class="status__dot" aria-hidden="true"></span>Live</span>
+          </div>
           <p>The catalog refreshes live while you read.</p>
         </article>
       </div>
     </section>
 
     <section class="section" id="download" aria-labelledby="download-title">
-      <p class="eyebrow">Android</p>
       <h2 id="download-title">Install it.</h2>
-      <div class="download">
-        <h3>Synthwire for Android v0.6.1</h3>
-        <p>Universal APK for arm64-v8a and x86_64 devices. Sideload it, or let your browser install it. Free, with no account.</p>
-        
-        <div class="actions" style="margin-bottom:0">
-          <a class="btn btn--primary" href="https://github.com/overmydragon/synthwire-web/releases/latest/download/app-universal-release.apk">Download the APK</a>
-          <a class="btn" href="https://github.com/overmydragon/synthwire-web/releases">GitHub releases</a>
+      <div class="download glass reveal">
+        <div class="download__grid">
+          <div>
+            <h3>Synthwire for Android v0.6.1</h3>
+            <p>Universal APK for arm64-v8a and x86_64 devices. Sideload it, or let your browser install it. Free, with no account.</p>
+            <div class="actions">
+              <a class="btn btn--primary" href="https://github.com/overmydragon/synthwire-web/releases/latest/download/app-universal-release.apk">Download the APK</a>
+              <a class="btn" href="https://github.com/overmydragon/synthwire-web/releases">GitHub releases</a>
+            </div>
+          </div>
+          <div class="download__meta">
+            <strong>Build checksum</strong>
+            SHA-256<br>
+            a3d635c13a44d3c625913a726626b6d2c7e61578626c9a866d6d6bf4b893b4f5<br><br>
+            No account. No ads. No tracking.
+          </div>
         </div>
-        <p class="meta">
-          SHA-256: a3d635c13a44d3c625913a726626b6d2c7e61578626c9a866d6d6bf4b893b4f5<br>
-          No account, no ads, no tracking.
-        </p>
       </div>
     </section>
 
-    <section class="data" aria-label="Data endpoint">
-      <p>
-        <strong>Catalog data.</strong> The app and web client read the same public JSON feed:
-        newsletters, categories and recent issue text. Machine-readable, no auth.
-      </p>
+    <section class="data glass" aria-label="Data endpoint">
+      <p><strong>Catalog data.</strong> The app and web client read the same public JSON feed: newsletters, categories and recent issue text. Machine-readable, no auth.</p>
       <a class="btn" href="./synthwire.json">synthwire.json</a>
     </section>
   </div>
 </main>
 
-<footer class="site">
+<footer class="site-footer">
   <div class="wrap">
     <div class="footer__inner">
       <div>
-        <a class="brand" href="./"><span class="brand__mark" aria-hidden="true">&#9672;</span> Synthwire</a>
-        <p class="meta">A reading library you actually own.</p>
+        <a class="brand" href="./" aria-label="Synthwire home">
+          <span class="brand__mark" aria-hidden="true"></span>
+          Synthwire
+        </a>
+        <p class="footer__note">A reading library you actually own.</p>
       </div>
       <nav class="footer__links" aria-label="Legal">
         <a href="https://app.opzay.com/terms">Terms of Service</a>
@@ -193,5 +668,105 @@
     <p class="colophon">&copy; 2026 Synthwire. All Rights Reserved.</p>
   </div>
 </footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var toggle = document.getElementById("theme-toggle");
+    var meta = document.querySelector('meta[name="theme-color"]');
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function syncToggle() {
+      var dark = root.dataset.theme === "dark";
+      if (toggle) {
+        toggle.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+        toggle.setAttribute("aria-pressed", String(dark));
+      }
+      if (meta) meta.setAttribute("content", dark ? "#0d0a08" : "#efe6d4");
+      document.documentElement.style.colorScheme = dark ? "dark" : "light";
+    }
+
+    syncToggle();
+
+    if (toggle) {
+      toggle.addEventListener("click", function () {
+        var next = root.dataset.theme === "dark" ? "light" : "dark";
+        root.dataset.theme = next;
+        try { localStorage.setItem("synthwire-theme", next); } catch (error) {}
+        syncToggle();
+      });
+    }
+
+    try {
+      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (event) {
+        if (!localStorage.getItem("synthwire-theme")) {
+          root.dataset.theme = event.matches ? "dark" : "light";
+          syncToggle();
+        }
+      });
+    } catch (error) {}
+
+    // Header deepens its glass once the page moves.
+    var header = document.querySelector(".site-header");
+    var ticking = false;
+    function onScroll() {
+      if (!header || ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () {
+        header.classList.toggle("is-scrolled", window.scrollY > 12);
+        ticking = false;
+      });
+    }
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    // Pause ambient loops when the tab is hidden.
+    document.addEventListener("visibilitychange", function () {
+      document.body.classList.toggle("is-paused", document.visibilityState === "hidden");
+    });
+
+    // One authored reveal sequence for the feature list and download panel.
+    if (!reduced && "IntersectionObserver" in window) {
+      document.documentElement.classList.add("js");
+      var reveal = document.querySelectorAll(".reveal");
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-in");
+          observer.unobserve(entry.target);
+        });
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.12 });
+      reveal.forEach(function (element) { observer.observe(element); });
+      // If anything goes wrong, never leave content hidden.
+      window.setTimeout(function () {
+        reveal.forEach(function (element) { element.classList.add("is-in"); });
+      }, 1800);
+    }
+
+    // Liquid glass responds to the pointer: a restrained tilt + specular glint.
+    var stage = document.querySelector(".stage");
+    var finePointer = window.matchMedia("(pointer: fine)").matches;
+    if (stage && finePointer && !reduced) {
+      var frame = 0;
+      stage.addEventListener("pointermove", function (event) {
+        if (frame) return;
+        frame = requestAnimationFrame(function () {
+          var rect = stage.getBoundingClientRect();
+          var x = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
+          var y = Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height));
+          stage.style.setProperty("--ry", ((x - 0.5) * 6).toFixed(2) + "deg");
+          stage.style.setProperty("--rx", ((0.5 - y) * 5).toFixed(2) + "deg");
+          stage.style.setProperty("--mx", (x * 100).toFixed(1) + "%");
+          stage.style.setProperty("--my", (y * 100).toFixed(1) + "%");
+          frame = 0;
+        });
+      });
+      stage.addEventListener("pointerleave", function () {
+        stage.style.setProperty("--rx", "0deg");
+        stage.style.setProperty("--ry", "0deg");
+      });
+    }
+  })();
+</script>
 </body>
 </html>
