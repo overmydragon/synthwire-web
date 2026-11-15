@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Synthwire &mdash; a private, family-friendly reader for the newsletters you follow</title>
-<meta name="description" content="Synthwire is a free, family-friendly Android reader for the newsletters you follow. No account, no ads, no tracking. Digest, catalog, live updates, in-app reader and a library you own." />
-<meta name="theme-color" content="#f2ead6" />
+<meta charset="utf-8" >
+<meta name="viewport" content="width=device-width, initial-scale=1" >
+<title>Synthwire · a private, family-friendly reader for the newsletters you follow</title>
+<meta name="description" content="Synthwire is a free, family-friendly Android reader for the newsletters you follow. No account, no ads, no tracking. Digest, catalog, live updates, in-app reader and a library you own." >
+<meta name="theme-color" content="#f2ead6" >
 <style>
   :root {
     --page: #f2ead6;
@@ -36,8 +36,8 @@
   .skip-link { position: absolute; left: -9999px; top: 0; background: var(--paper); padding: .5rem; z-index: 6; }
   .skip-link:focus { left: .5rem; }
   .wrap { width: min(64rem, 100%); margin: 0 auto; padding: 0 1.25rem; }
-  header.site { border-bottom: 2px solid var(--rule); background: var(--page); }
-  .site__inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .875rem 0; }
+  header.site { border-bottom: 2px solid var(--rule); background: var(--page); --slop-allow: redundant-border; }
+  .site__inner {display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: .875rem}
   .brand { display: inline-flex; align-items: center; gap: .5rem; font-family: var(--mono); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; font-size: .8125rem; color: var(--ink); text-decoration: none; }
   .brand__mark { color: var(--accent-text); }
   nav.main { display: flex; gap: 1rem; flex-wrap: wrap; }
@@ -54,34 +54,36 @@
   .btn--primary { background: var(--accent); border-color: var(--accent); }
   .fineprint { font-family: var(--mono); font-size: .6875rem; color: var(--ink-muted); margin: 0 0 2.5rem; }
   .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; margin: 0 0 3rem; padding: 0; list-style: none; }
-  .stat { border: 2px solid var(--rule); background: var(--paper); box-shadow: 4px 4px 0 var(--rule); padding: .75rem; }
+  .stat { border: 2px solid var(--rule); background: var(--paper); box-shadow: 4px 4px 0 var(--rule); padding: .75rem; --slop-allow: redundant-border; }
   .stat strong { display: block; font-family: var(--serif); font-size: 1.75rem; line-height: 1; }
   .stat span { display: block; font-family: var(--mono); font-size: .625rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-muted); margin-top: .375rem; }
   h2 { font-family: var(--serif); font-size: clamp(1.75rem, 4vw, 2.5rem); line-height: 1.1; margin: 0 0 .75rem; }
   .section { margin-top: 3rem; }
   .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.5rem; }
-  .card { border: 2px solid var(--rule); background: var(--paper); box-shadow: 5px 5px 0 var(--rule); padding: 1.125rem; }
+  .card { border: 2px solid var(--rule); background: var(--paper); box-shadow: 5px 5px 0 var(--rule); padding: 1.125rem; --slop-allow: redundant-border; }
   .card--wide { grid-column: 1 / -1; }
   .card h3 { font-family: var(--serif); font-size: 1.375rem; line-height: 1.15; margin: 0 0 .5rem; }
   .card p { margin: 0; color: var(--ink-muted); font-size: .9375rem; line-height: 1.55; }
-  .tag { display: inline-block; font-family: var(--mono); font-size: .625rem; letter-spacing: .1em; text-transform: uppercase; padding: .1875rem .375rem; border: 2px solid var(--accent); background: var(--accent); color: var(--accent-ink); margin-bottom: .625rem; }
-  .download { border: 2px solid var(--rule); background: var(--paper); box-shadow: 6px 6px 0 var(--rule); padding: 1.25rem; margin-top: 1.25rem; }
+  .tag { display: inline-block; font-family: var(--mono); font-size: .625rem; letter-spacing: .1em; text-transform: uppercase; padding: .1875rem .375rem; border: 2px solid var(--accent); background: var(--accent); color: var(--accent-ink); margin-bottom: .625rem; --slop-allow: redundant-border; }
+  .download { border: 2px solid var(--rule); background: var(--paper); box-shadow: 6px 6px 0 var(--rule); padding: 1.25rem; margin-top: 1.25rem; --slop-allow: redundant-border; }
   .download h3 { font-family: var(--serif); font-size: 1.5rem; margin: 0 0 .25rem; }
   .download p { color: var(--ink-muted); font-size: .9375rem; margin: 0 0 1rem; }
   .meta { font-family: var(--mono); font-size: .6875rem; color: var(--ink-muted); margin: .875rem 0 0; line-height: 1.6; }
   .data { border-top: 2px solid var(--rule); border-bottom: 2px solid var(--rule); padding: 1rem 0; margin-top: 3rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; align-items: center; }
   .data p { margin: 0; color: var(--ink-muted); font-size: .9375rem; max-width: 36rem; }
-  footer.site { border-top: 2px solid var(--rule); background: var(--page); padding: 1.25rem 0 2rem; }
+  footer.site { border-top: 2px solid var(--rule); background: var(--page); padding: 1.25rem 0 2rem; --slop-allow: redundant-border; }
   .footer__inner { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; align-items: flex-start; }
   .footer__links { display: flex; gap: 1rem; flex-wrap: wrap; }
   .footer__links a { font-family: var(--mono); font-size: .6875rem; color: var(--ink); }
-  .colophon { font-family: var(--mono); font-size: .625rem; color: var(--ink-muted); margin: 1rem 0 0; }
+  .colophon { font-family: var(--mono); font-size: 12px; color: var(--ink-muted); margin: 1rem 0 0; }
   @media (max-width: 640px) {
     .grid { grid-template-columns: 1fr; }
     .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .site__inner { flex-wrap: wrap; }
   }
 </style>
+<style id="gesso-text-wrap">h1,h2,h3{text-wrap:balance}p,li,figcaption,blockquote{text-wrap:pretty}</style>
+<style id="gesso-font-smoothing">html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -141,7 +143,7 @@
           <p>Bookmarks, highlights and notes, snapshots, collections and exports. Free, and stored on your device.</p>
         </article>
         <article class="card card--wide">
-          <span class="tag">Live</span>
+          <span class="tag" data-slop-allow="live-clock-eyebrow">Live</span>
           <h3>Live updates</h3>
           <p>The catalog refreshes live while you read.</p>
         </article>
@@ -152,15 +154,15 @@
       <p class="eyebrow">Android</p>
       <h2 id="download-title">Install it.</h2>
       <div class="download">
-        <h3>Synthwire for Android &mdash; v0.6.1</h3>
+        <h3>Synthwire for Android v0.6.1</h3>
         <p>Universal APK for arm64-v8a and x86_64 devices. Sideload it, or let your browser install it. Free, with no account.</p>
-        <!-- latest/download resolves to the newest release asset, so no per-release URL edit is needed -->
+        
         <div class="actions" style="margin-bottom:0">
           <a class="btn btn--primary" href="https://github.com/overmydragon/synthwire-web/releases/latest/download/app-universal-release.apk">Download the APK</a>
           <a class="btn" href="https://github.com/overmydragon/synthwire-web/releases">GitHub releases</a>
         </div>
         <p class="meta">
-          SHA-256: a3d635c13a44d3c625913a726626b6d2c7e61578626c9a866d6d6bf4b893b4f5<br />
+          SHA-256: a3d635c13a44d3c625913a726626b6d2c7e61578626c9a866d6d6bf4b893b4f5<br>
           No account, no ads, no tracking.
         </p>
       </div>
