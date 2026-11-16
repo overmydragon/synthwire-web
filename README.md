@@ -27,6 +27,9 @@ included.
 - Material: a glass system with an outer shell, a readable inner scrim plate,
   a specular rim, warm refracted light, and layered back plates. Typography and
   the orange accent carry over from the original Synthwire identity.
+- Navigation mirrors the Android v0.6.2 floating glass tab bar: a detached glass
+  capsule with text links on desktop, icon-only links on mobile, and an accent pill
+  that follows the active section.
 - Theme: follows the OS preference on first load; the header toggle overrides it
   and stores the choice in `localStorage`.
 - Motion: one authored hero sequence (the glass stage assembles), pointer-driven

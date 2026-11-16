@@ -167,25 +167,48 @@
 
   /* Header */
   .site-header {
-    --slop-allow: redundant-border;
     position: sticky; top: 0; z-index: 40;
-    background: color-mix(in srgb, var(--page) 68%, transparent);
-    -webkit-backdrop-filter: blur(18px) saturate(1.5);
-    backdrop-filter: blur(18px) saturate(1.5);
-    border-bottom: 1px solid var(--rule);
-    transition: background 0.35s var(--ease), box-shadow 0.35s var(--ease);
+    background: linear-gradient(180deg, var(--page) 0%, color-mix(in srgb, var(--page) 86%, transparent) 62%, transparent 100%);
+    border-bottom: 0;
+    transition: background 0.35s var(--ease);
   }
   .site-header.is-scrolled {
-    background: color-mix(in srgb, var(--page) 86%, transparent);
-    box-shadow: 0 20px 50px -42px var(--glass-shadow);
+    background: color-mix(in srgb, var(--page) 90%, transparent);
+    -webkit-backdrop-filter: blur(14px) saturate(1.3);
+    backdrop-filter: blur(14px) saturate(1.3);
+    box-shadow: 0 1px 0 var(--rule);
   }
-  .header__inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 0.85rem; }
-  .header__right { display: flex; align-items: center; gap: clamp(0.75rem, 2.5vw, 1.5rem); min-width: 0; }
+  .header__inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 0.9rem; }
+  .nav-capsule {
+    display: flex; align-items: center; gap: 0.3rem; min-width: 0;
+    padding: 0.35rem 0.4rem;
+    border: 1px solid var(--glass-border); border-radius: 999px;
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(16px) saturate(1.45); backdrop-filter: blur(16px) saturate(1.45);
+    box-shadow:
+      inset 0 1px 0 var(--glass-edge),
+      0 0 0 1px color-mix(in srgb, var(--ink) 7%, transparent),
+      0 16px 34px -28px var(--glass-shadow),
+      0 6px 18px -12px var(--glass-shadow);
+    --slop-allow: redundant-border;
+  }
   .brand { display: inline-flex; align-items: center; gap: 0.55rem; color: var(--ink); text-decoration: none; font-family: var(--mono); font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; white-space: nowrap; }
   .brand__mark { width: 0.58rem; height: 0.58rem; background: var(--accent); transform: rotate(45deg); box-shadow: 0 1px 2px rgba(20, 17, 14, 0.16); flex: 0 0 auto; }
-  .nav { display: flex; align-items: center; gap: clamp(0.75rem, 2.4vw, 1.4rem); flex-wrap: wrap; }
-  .nav a { color: var(--ink); text-decoration: none; font-family: var(--mono); font-size: 0.6875rem; letter-spacing: 0.11em; text-transform: uppercase; padding-block: 0.35rem; border-bottom: 1px solid transparent; transition: color 0.2s ease, border-color 0.2s ease; }
-  .nav a:hover, .nav a:focus-visible { color: var(--accent-text); border-bottom-color: var(--accent); }
+  .nav { display: flex; align-items: center; gap: 0.1rem; flex-wrap: nowrap; min-width: 0; }
+  .nav a {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem;
+    min-height: 2.1rem; padding: 0.35rem 0.7rem; border-radius: 999px;
+    color: var(--ink-muted); text-decoration: none;
+    font-family: var(--mono); font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase;
+    white-space: nowrap;
+    transition: color 0.2s ease, background 0.2s ease;
+  }
+  .nav a:hover, .nav a:focus-visible { color: var(--accent-text); background: color-mix(in srgb, var(--accent) 13%, transparent); }
+  .nav a.is-active { color: var(--accent-text); background: color-mix(in srgb, var(--accent) 17%, transparent); }
+  .nav__icon { display: none; width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; }
+  .nav__text { display: inline; }
+  .nav-capsule .theme-toggle { width: 2.1rem; height: 2.1rem; border: 0; background: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .nav-capsule .theme-toggle:hover { background: color-mix(in srgb, var(--accent) 13%, transparent); }
   .theme-toggle {
     --slop-allow: redundant-border heavy-box-shadow;
     position: relative; width: 2.5rem; height: 2.5rem; flex: 0 0 auto;
@@ -373,6 +396,7 @@
 
   /* Sections */
   .section { margin-top: clamp(3.5rem, 8vw, 6rem); }
+  #features, #download { scroll-margin-top: 6rem; }
   .section h2 { margin: 0; font-family: var(--serif); font-size: clamp(2rem, 4.8vw, 3.4rem); font-weight: 600; line-height: 1.02; letter-spacing: -0.02em; text-wrap: balance; max-width: 15ch; }
   .features { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1rem; margin-top: 1.75rem; }
   .feature {
@@ -460,7 +484,6 @@
     .stat:nth-child(3) { border-left: 0; }
     .stat:nth-child(n + 3) { border-top: 1px solid var(--rule); }
     .header__inner { flex-wrap: wrap; }
-    .header__right { margin-left: auto; }
     .stage-wrap { min-height: 28rem; }
     .stage { width: min(100%, 28rem); min-height: 27rem; }
     .stage__scene { min-height: 27rem; }
@@ -468,8 +491,13 @@
     .stage__plate--near { inset: 1.2rem 0.6rem 0.5rem 0.8rem; }
   }
   @media (max-width: 540px) {
-    .nav { gap: 0.75rem; }
-    .nav a { font-size: 12px; }
+    .header__inner { flex-wrap: wrap; align-items: center; }
+    .nav-capsule { width: 100%; justify-content: space-between; margin-top: 0.55rem; padding: 0.3rem 0.35rem; }
+    .nav { flex: 1 1 auto; justify-content: space-between; }
+    .nav a { width: 2.7rem; height: 2.2rem; min-height: 0; padding: 0; }
+    .nav__text { display: none; }
+    .nav__icon { display: block; width: 1.15rem; height: 1.15rem; }
+    .nav-capsule .theme-toggle { width: 2rem; height: 2rem; }
     .hero h1 { font-size: clamp(2.55rem, 12vw, 3.4rem); max-width: 13ch; }
     .actions { flex-direction: column; align-items: stretch; }
     .btn { width: 100%; }
@@ -480,10 +508,6 @@
     .stage__issue { font-size: 0.95rem; }
     .stage__plate--far { --rot: 2deg; inset: 1.8rem 1rem 0 1.4rem; }
     .stage__plate--near { --rot: -1.5deg; inset: 1rem 0.9rem 0.4rem 0.6rem; }
-    .header__inner { align-items: flex-start; }
-    .header__right { width: 100%; justify-content: space-between; margin-left: 0; padding-top: 0.35rem; }
-    .nav { gap: 0.8rem; }
-    .theme-toggle { width: 2.25rem; height: 2.25rem; }
     .stats { grid-template-columns: 1fr 1fr; }
     .feature, .feature--wide { grid-column: span 2; min-height: 0; }
     .footer__inner { flex-direction: column; }
@@ -515,12 +539,24 @@
       <span class="brand__mark" aria-hidden="true"></span>
       Synthwire
     </a>
-    <div class="header__right">
+    <div class="nav-capsule">
       <nav class="nav" aria-label="Main">
-        <a href="#download">Download</a>
-        <a href="#features">Features</a>
-        <a href="https://app.opzay.com">Web app</a>
-        <a href="./synthwire.json">Data</a>
+        <a href="#download" data-nav="download" aria-label="Download">
+          <svg class="nav__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
+          <span class="nav__text">Download</span>
+        </a>
+        <a href="#features" data-nav="features" aria-label="Features">
+          <svg class="nav__icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>
+          <span class="nav__text">Features</span>
+        </a>
+        <a href="https://app.opzay.com" aria-label="Open the web app">
+          <svg class="nav__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M5 5h5M5 5v14h14v-5"/></svg>
+          <span class="nav__text">Web app</span>
+        </a>
+        <a href="./synthwire.json" aria-label="Catalog data">
+          <svg class="nav__icon" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></svg>
+          <span class="nav__text">Data</span>
+        </a>
       </nav>
       <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch to dark theme" aria-pressed="false">
         <svg class="icon icon--moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
@@ -544,7 +580,7 @@
           <a class="btn btn--primary" href="https://github.com/overmydragon/synthwire-web/releases/latest/download/app-universal-release.apk">Download the APK</a>
           <a class="btn" href="https://app.opzay.com">Open the web app</a>
         </div>
-        <p class="fineprint">Android 7.0+ &middot; arm64-v8a and x86_64 &middot; version 0.6.1 &middot; no account required</p>
+        <p class="fineprint">Android 7.0+ &middot; arm64-v8a and x86_64 &middot; version 0.6.2 &middot; no account required</p>
       </div>
 
       <div class="stage-wrap" aria-hidden="true">
@@ -626,7 +662,7 @@
       <div class="download glass reveal">
         <div class="download__grid">
           <div>
-            <h3>Synthwire for Android v0.6.1</h3>
+            <h3>Synthwire for Android v0.6.2</h3>
             <p>Universal APK for arm64-v8a and x86_64 devices. Sideload it, or let your browser install it. Free, with no account.</p>
             <div class="actions">
               <a class="btn btn--primary" href="https://github.com/overmydragon/synthwire-web/releases/latest/download/app-universal-release.apk">Download the APK</a>
@@ -636,7 +672,7 @@
           <div class="download__meta">
             <strong>Build checksum</strong>
             SHA-256<br>
-            a3d635c13a44d3c625913a726626b6d2c7e61578626c9a866d6d6bf4b893b4f5<br><br>
+            21c37c7e2abf029e2008ffdf889dce0ba756312032c81b55073ab4fdbd5767af<br><br>
             No account. No ads. No tracking.
           </div>
         </div>
@@ -705,6 +741,31 @@
         }
       });
     } catch (error) {}
+
+    // The active pill follows the in-page section, like the app's active tab.
+    var navSections = Array.prototype.slice.call(document.querySelectorAll(".nav a[data-nav]"))
+      .map(function (link) {
+        var section = document.querySelector(link.getAttribute("href"));
+        return section ? { link: link, section: section } : null;
+      })
+      .filter(Boolean);
+    if ("IntersectionObserver" in window && navSections.length) {
+      var spy = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          navSections.forEach(function (item) {
+            item.link.classList.remove("is-active");
+            item.link.removeAttribute("aria-current");
+          });
+          var match = navSections.filter(function (item) { return item.section === entry.target; })[0];
+          if (match) {
+            match.link.classList.add("is-active");
+            match.link.setAttribute("aria-current", "location");
+          }
+        });
+      }, { rootMargin: "-24% 0px -58% 0px", threshold: 0 });
+      navSections.forEach(function (item) { spy.observe(item.section); });
+    }
 
     // Header deepens its glass once the page moves.
     var header = document.querySelector(".site-header");
