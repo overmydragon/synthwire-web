@@ -148,7 +148,6 @@
     position: relative;
     width: min(36rem, 100%);
     padding: clamp(1.5rem, 4vw, 2.5rem);
-    border: 1px solid var(--glass-border);
     border-radius: 1.75rem;
     background: var(--glass);
     -webkit-backdrop-filter: blur(22px) saturate(1.6);
@@ -195,11 +194,17 @@
     .brand__mark { width: 1.5rem; height: 1.5rem; }
   }
   .pill {
-    display: inline-flex; align-items: center; gap: 0.4rem;
-    padding: 0.22rem 0.6rem; border-radius: 999px;
-    border: 1px solid var(--glass-border); background: var(--glass);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.22rem 0.6rem;
+    border-radius: 999px;
+    background: var(--glass);
     color: var(--accent-text);
-    font-family: var(--mono); font-size: 0.625rem; letter-spacing: 0.1em; text-transform: uppercase;
+    font-family: var(--mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
   .pill__dot { width: 0.38rem; height: 0.38rem; border-radius: 50%; background: var(--accent); }
 
@@ -254,6 +259,8 @@
     *, *::before, *::after { transition-duration: 0.001ms !important; }
   }
 </style>
+<style id="gesso-text-wrap">h1,h2,h3{text-wrap:balance}p,li,figcaption,blockquote{text-wrap:pretty}</style>
+<style id="gesso-font-smoothing">html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>
 </head>
 <body>
 <div class="atmosphere" aria-hidden="true">
@@ -275,7 +282,7 @@
 
   <h1 id="redirect-title">Synthwire has moved to synthwire.opzay.com.</h1>
   <p>
-    Taking you to the unified web reader and personal library — 100 family-friendly newsletters,
+    Taking you to the unified web reader and personal library: 100 family-friendly newsletters,
     passkey sync, bookmarks, snapshots, and highlights.
   </p>
 
