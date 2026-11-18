@@ -9,7 +9,9 @@
 <title>Synthwire · Redirecting to synthwire.opzay.com</title>
 <meta name="description" content="Synthwire is a free, family-friendly newsletter reader and personal reading library. Redirecting to synthwire.opzay.com.">
 <meta name="theme-color" content="#ede3d0">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2314110e'/%3E%3Cpath d='M16 6 26 16 16 26 6 16Z' fill='%23e8590c'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="favicon.png" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" href="favicon-dark.png" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="favicon.png">
 <script>
   (function () {
     try {
@@ -182,8 +184,15 @@
     letter-spacing: 0.15em; text-transform: uppercase;
   }
   .brand__mark {
-    width: 0.58rem; height: 0.58rem; background: var(--accent);
-    transform: rotate(45deg); box-shadow: 0 1px 2px rgba(20, 17, 14, 0.16); flex: 0 0 auto;
+    width: 2rem; height: 2rem;
+    background: url("brand/logo-light.png") center / contain no-repeat;
+    flex: 0 0 auto;
+  }
+  :root[data-theme="dark"] .brand__mark {
+    background-image: url("brand/logo-dark.png");
+  }
+  @media (max-width: 480px) {
+    .brand__mark { width: 1.5rem; height: 1.5rem; }
   }
   .pill {
     display: inline-flex; align-items: center; gap: 0.4rem;
